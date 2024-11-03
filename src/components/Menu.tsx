@@ -113,6 +113,7 @@ const menuItems = [
   }
 ];
 
+import { role } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -127,16 +128,18 @@ const Menu = () => {
               {i.title}
             </span>
             {i.items.map((item) => {
-              return (
-                <Link
-                  key={item.href}
-                  href={item.label}
-                  className="flex items-center justify-center lg:justify-start text-gray-400 gap-4 py-2"
-                >
-                  <Image src={item.icon} alt="logo" width={20} height={20} />
-                  <span className="hidden lg:block">{item.label}</span>
-                </Link>
-              );
+              if (item.visible.includes(role)) {
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.label}
+                    className="flex items-center justify-center lg:justify-start text-gray-400 gap-4 py-2  rounded-md md:px-2  hover:bg-customColorSkyLight"
+                  >
+                    <Image src={item.icon} alt="logo" width={20} height={20} />
+                    <span className="hidden lg:block">{item.label}</span>
+                  </Link>
+                );
+              }
             })}
           </div>
         );
