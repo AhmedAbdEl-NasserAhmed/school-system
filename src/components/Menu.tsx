@@ -132,11 +132,13 @@ const Menu = () => {
                 return (
                   <Link
                     key={item.href}
-                    href={item.label}
+                    href={item.href}
                     className="flex items-center justify-center lg:justify-start text-gray-400 gap-4 py-2  rounded-md md:px-2  hover:bg-customColorSkyLight"
                   >
                     <Image src={item.icon} alt="logo" width={20} height={20} />
-                    <span className="hidden lg:block">{item.label}</span>
+                    <span className="hidden lg:block capitalize">
+                      {item.label}
+                    </span>
                   </Link>
                 );
               }
