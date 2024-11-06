@@ -7,7 +7,7 @@ const Button = ({
   disabled,
   onClick
 }: {
-  className: string;
+  className?: string;
   children: React.ReactNode;
   type: "submit" | "reset" | "button" | undefined;
   disabled?: boolean;

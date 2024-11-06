@@ -2,13 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import Input from "../Input";
-import { TeacherSchema } from "@/schemas/schemas";
-import Button from "../Button";
-import ErrorMessage from "../ErrorMessage";
-import Image from "next/image";
 
-const TeacherForm = ({
+import Image from "next/image";
+import { studentSchema } from "@/schemas/schemas";
+import Input from "../Input";
+
+const StudentForm = ({
   type,
   data
 }: {
@@ -20,44 +19,38 @@ const TeacherForm = ({
     handleSubmit,
     formState: { errors }
   } = useForm({
-    resolver: zodResolver(TeacherSchema),
-    mode: "onChange"
+    resolver: zodResolver(studentSchema)
   });
 
-  console.log("errors", errors);
-
-  function omSubmit() {}
-
-  console.log(data);
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
 
   return (
-    <form
-      className="flex flex-col gap-8 w-full "
-      onSubmit={handleSubmit(omSubmit)}
-    >
+    <form className="flex flex-col gap-8" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">
         {type === "create"
-          ? "Create a new Teacher"
-          : `Update Teacher ${data.username} `}
+          ? "Create a new student"
+          : `Update Student ${data.username} `}
       </h1>
-      <span className="text-sm text-gray-400 font-medium">
-        Authentication information
+      <span className="text-xs text-gray-400 font-medium">
+        Authentication Information
       </span>
-      <div className="flex flex-wrap gap-4 justify-between">
+      <div className="flex justify-between flex-wrap gap-4">
         <Input
           defaultvalue={data?.username}
-          label="User Name"
-          register={{ ...register("userName") }}
+          label="Username"
+          register={{ ...register("username") }}
           errorMessage={
-            errors["userName"] && errors["userName"]?.message?.toString()
+            errors["username"] && errors["username"]?.message?.toString()
           }
           className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
           type="text"
         />
         <Input
-          defaultvalue={data?.email}
-          label="Email Address"
-          register={{ ...register("email") }}
+          defaultvalue={data?.lastName}
+          label="Email"
+          register={{ ...register("lastName") }}
           errorMessage={errors["email"] && errors["email"]?.message?.toString()}
           className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
           type="text"
@@ -73,10 +66,10 @@ const TeacherForm = ({
           type="password"
         />
       </div>
-      <span className="text-sm text-gray-400 font-medium">
-        Personal Inforamtion
+      <span className="text-xs text-gray-400 font-medium">
+        Personal Information
       </span>
-      <div className="flex flex-wrap gap-4 justify-between">
+      <div className="flex justify-between flex-wrap gap-4">
         <Input
           defaultvalue={data?.firstName}
           label="First Name"
@@ -117,7 +110,7 @@ const TeacherForm = ({
         />
         <Input
           defaultvalue={data?.bloodType}
-          label="BloodType"
+          label="Blood Type"
           register={{ ...register("bloodType") }}
           errorMessage={
             errors["bloodType"] && errors["bloodType"]?.message?.toString()
@@ -127,56 +120,52 @@ const TeacherForm = ({
         />
         <Input
           defaultvalue={data?.dateOfBirth}
-          label="Birth Day"
+          label="Birthday"
           register={{ ...register("birthday") }}
           errorMessage={
             errors["birthday"] && errors["birthday"]?.message?.toString()
           }
           className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          type="date"
+          type="text"
         />
 
-        <div className="flex flex-col gap-2 md:w-1/4 w-full">
-          <label className="text-xs text-gray-500 ">Sex</label>
-
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Sex</label>
           <select
-            defaultValue={data?.sex}
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("sex")}
+            defaultValue={data?.sex}
           >
             <option value="male">Male</option>
-            <option value="female">Fe Male</option>
+            <option value="female">Female</option>
           </select>
-          {errors["sex"] && (
-            <ErrorMessage
-              message={errors?.["sex"]?.message?.toString() as string}
-            />
+          {errors.sex?.message && (
+            <p className="text-xs text-red-400">
+              {errors.sex.message.toString()}
+            </p>
           )}
         </div>
-
-        <div className="flex flex-col gap-2 md:w-1/4 w-full self-center">
+        <div className="flex flex-col gap-2 w-full md:w-1/4 justify-center">
           <label
-            className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer "
+            className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
             htmlFor="img"
           >
             <Image src="/upload.png" alt="" width={28} height={28} />
-            <span>Upload Photo</span>
+            <span>Upload a photo</span>
           </label>
-
           <input type="file" id="img" {...register("img")} className="hidden" />
-          {errors["img"] && (
-            <ErrorMessage
-              message={errors?.["img"]?.message?.toString() as string}
-            />
+          {errors.img?.message && (
+            <p className="text-xs text-red-400">
+              {errors.img.message.toString()}
+            </p>
           )}
         </div>
       </div>
-
-      <Button className="bg-blue-400 text-white p-2 rounded-md" type="submit">
+      <button className="bg-blue-400 text-white p-2 rounded-md">
         {type === "create" ? "Create" : "Update"}
-      </Button>
+      </button>
     </form>
   );
 };
 
-export default TeacherForm;
+export default StudentForm;

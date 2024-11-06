@@ -18,7 +18,24 @@ const SingleStudentPage = ({ params }: { params: { id: string } }) => {
         {/* Top */}
         <div className="flex flex-col lg:flex-row  gap-4">
           {/* Teacher Card */}
-          <Card person={student} />
+          <Card
+            data={{
+              id: 1,
+              username: "deanguerrero",
+              email: "deanguerrero@gmail.com",
+              password: "password",
+              firstName: "Dean",
+              lastName: "Guerrero",
+              phone: "+1 234 567 89",
+              address: "1234 Main St, Anytown, USA",
+              bloodType: "A+",
+              dateOfBirth: "2000-01-01",
+              sex: "male",
+              img: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            }}
+            table="student"
+            person={student}
+          />
           {/* Small Cards */}
           <div className="flex-1 flex gap-4 justify-between flex-wrap ">
             <div className="flex items-center gap-2 bg-white p-4 w-full rouned-md md:w-[47%] xl:w-[45%] 2xl:w-[47%] ">

@@ -1,6 +1,26 @@
 import Image from "next/image";
+import FormModal from "./FormModal";
 
-const Card = ({ person }: { person: any | undefined }) => {
+const Card = ({
+  person,
+  data,
+  table
+}: {
+  person: any | undefined;
+  data: any;
+  table:
+    | "teacher"
+    | "student"
+    | "parent"
+    | "subject"
+    | "class"
+    | "lesson"
+    | "exam"
+    | "assignment"
+    | "result"
+    | "event"
+    | "announcement";
+}) => {
   return (
     <div className="flex items-center bg-customColorSky py-6 px-4 rounded-md flex-1 gap-4 ">
       {/* Image */}
@@ -15,7 +35,10 @@ const Card = ({ person }: { person: any | undefined }) => {
       </div>
       {/* Information */}
       <div className="w-2/3 flex flex-col gap-4 justify-between ">
-        <h2 className="font-semiboldld text-xl">{person?.name}</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="font-semiboldld text-xl">{person?.name}</h2>
+          <FormModal table={table} type="update" data={data} />
+        </div>
         <p className="text-gray-500 text-sm">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam,
           molestiae?

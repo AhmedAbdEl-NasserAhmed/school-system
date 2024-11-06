@@ -1,9 +1,25 @@
 "use client";
 
-import Image from "next/image";
-import Button from "./Button";
-import { useState } from "react";
 import useClickOutside from "@/hooks/useClickOutside";
+import Image from "next/image";
+import { useState } from "react";
+import Button from "./Button";
+import dynamic from "next/dynamic";
+
+const StudentForm = dynamic(() => import("./Forms/StudentForm"), {
+  loading: () => <p>Loading Student form .....</p>
+});
+
+const TeacherForm = dynamic(() => import("./Forms/TeacherForm"), {
+  loading: () => <p>Loading Teacher form .....</p>
+});
+
+const forms: {
+  [key: string]: (type: "create" | "update", data: any) => JSX.Element;
+} = {
+  teacher: (type, data) => <TeacherForm type={type} data={data} />,
+  student: (type, data) => <StudentForm type={type} data={data} />
+};
 
 const FormModal = ({
   type,
@@ -43,7 +59,7 @@ const FormModal = ({
 
   const Form = () => {
     return type === "delete" && id ? (
-      <form action="" className="p-4 flex flex-col gap-4">
+      <form action="" className="p-4 flex flex-col gap-4 ">
         <p className="text-center font-medium text-lg">
           Are you sure that you want to delete this {table} ?{" "}
         </p>
@@ -64,8 +80,10 @@ const FormModal = ({
           </Button>
         </div>
       </form>
+    ) : type === "create" || type === "update" ? (
+      forms[table](type, data)
     ) : (
-      "Create of Update form"
+      "Form Not Found"
     );
   };
 
@@ -83,7 +101,7 @@ const FormModal = ({
           ref={ref}
           className="w-screen fixed h-screen top-0 left-0 z-50 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center "
         >
-          <div className="relative rounded-md w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%] bg-white shadow-md flex items-center justify-center p-4 ">
+          <div className="relative rounded-md w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%] bg-white shadow-md flex items-center  justify-center p-4 ">
             <Form />
             <span
               onClick={() => setOpenModal(false)}

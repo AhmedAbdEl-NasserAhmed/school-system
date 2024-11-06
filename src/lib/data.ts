@@ -13,7 +13,8 @@ export const teachersData = [
     phone: "1234567890",
     subjects: ["Math", "Geometry"],
     classes: ["1B", "2A", "3C"],
-    address: "123 Main St, Anytown, USA"
+    address: "123 Main St, Anytown, USA",
+    bloodType: "A+"
   },
   {
     id: 2,
