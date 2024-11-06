@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
@@ -28,14 +29,7 @@ const page = () => {
             >
               <Image src="/sort.png" alt="photo" width={14} height={14} />
             </Button>
-            {role === "admin" && (
-              <Button
-                type="button"
-                className="bg-customColorYellow w-8 h-8 rounded-full flex items-center justify-center"
-              >
-                <Image src="/plus.png" alt="photo" width={14} height={14} />
-              </Button>
-            )}
+            {role === "admin" && <FormModal type="create" table="lesson" />}
           </div>
         </div>
       </div>

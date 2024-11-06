@@ -1,3 +1,5 @@
+import { UseFormRegisterReturn } from "react-hook-form";
+
 export interface TeacherData {
   id: number;
   teacherId: string;
@@ -100,4 +102,17 @@ export interface AnnouncementData {
   title: string;
   class: string;
   date: string; // assuming the date is in ISO format as a string
+}
+export interface InputProps {
+  name?: string;
+  type: string;
+  placeholder?: string;
+  register?: UseFormRegisterReturn;
+  value?: string;
+  label?: string;
+  onChange?: (e: any) => void;
+  errorMessage?: string;
+  disabled?: boolean;
+  defaultvalue?: string;
+  className: string;
 }

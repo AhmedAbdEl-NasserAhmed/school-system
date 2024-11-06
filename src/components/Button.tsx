@@ -4,15 +4,22 @@ const Button = ({
   className,
   children,
   type,
-  disabled
+  disabled,
+  onClick
 }: {
   className: string;
   children: React.ReactNode;
   type: "submit" | "reset" | "button" | undefined;
   disabled?: boolean;
+  onClick?: () => void;
 }) => {
   return (
-    <button disabled={disabled} type={type} className={className}>
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      type={type}
+      className={className}
+    >
       {children}
     </button>
   );

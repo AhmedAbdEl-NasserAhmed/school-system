@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import FormModal from "@/components/FormModal";
 import {
   AnnouncementData,
   AssignmentData,
@@ -61,12 +62,7 @@ export const renderTeacherTableRow = (teacher: TeacherData) => {
             </Button>
           </Link>
           {role === "admin" && (
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/delete.png" alt="" width={16} height={16} />
-            </Button>
+            <FormModal type="delete" table="teacher" id={teacher.id} />
           )}
         </div>
       </td>
@@ -115,13 +111,7 @@ export const renderStudentTableRow = (student: StudentData) => {
               <Image src="/view.png" alt="" width={16} height={16} />
             </Button>
           </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          <FormModal type="delete" table="student" id={student.id} />
         </div>
       </td>
     </tr>
@@ -152,21 +142,12 @@ export const renderParentTableRow = (parent: ParentData) => {
       </td>
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/parents/${parent.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal type="update" table="parent" data={parent} />
+              <FormModal type="delete" table="parent" id={parent.id} />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -188,21 +169,12 @@ export const renderSubjectTableRow = (subject: SubjectData) => {
 
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/subjects/${subject.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/view.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal type="update" table="subject" />
+              <FormModal type="delete" table="subject" id={subject.id} />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -232,21 +204,12 @@ export const renderClassTableRow = (classData: ClassData) => {
       </td>
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/classes/${classData.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/view.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal type="update" table="class" />
+              <FormModal type="delete" table="class" />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -273,21 +236,12 @@ export const renderLessonTableRow = (lesson: LessonData) => {
 
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/lessons/${lesson.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal type="update" table="lesson" data={lesson} />
+              <FormModal type="delete" table="lesson" id={lesson.id} />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -318,21 +272,12 @@ export const renderExamsTableRow = (exam: ExamData) => {
 
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/exams/${exam.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal type="update" table="exam" data={exam} />
+              <FormModal type="delete" table="exam" id={exam.id} />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -364,21 +309,12 @@ export const renderAssignmentsTableRow = (assignment: AssignmentData) => {
 
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/assignments/${assignment.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal type="update" table="assignment" data={assignment} />
+              <FormModal type="delete" table="assignment" id={assignment.id} />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -417,21 +353,12 @@ export const renderResultsTableRow = (result: ResultData) => {
 
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/results/${result.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal type="update" table="result" data={result} />
+              <FormModal type="delete" table="result" id={result.id} />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -465,21 +392,12 @@ export const renderEventTableRow = (event: EventData) => {
       </td>
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/events/${event.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal type="update" table="event" data={event} />
+              <FormModal type="delete" table="event" id={event.id} />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -506,21 +424,20 @@ export const renderAnnouncementsTableRow = (announcement: AnnouncementData) => {
 
       <td>
         <div className="flex items-center gap-3">
-          <Link href={`/list/announcements/${announcement.id}`}>
-            <Button
-              className="w-7 h-7 rounded-full bg-customColorSky flex items-center justify-center"
-              type="button"
-            >
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </Button>
-          </Link>
-
-          <Button
-            className="w-7 h-7 rounded-full bg-customColorPurple flex items-center justify-center"
-            type="button"
-          >
-            <Image src="/delete.png" alt="" width={16} height={16} />
-          </Button>
+          {role === "admin" && (
+            <>
+              <FormModal
+                type="update"
+                table="announcement"
+                data={announcement}
+              />
+              <FormModal
+                type="delete"
+                table="announcement"
+                id={announcement.id}
+              />
+            </>
+          )}
         </div>
       </td>
     </tr>
