@@ -8,6 +8,7 @@ import { renderTeacherTableRow } from "@/helpers/helpers";
 import { role } from "@/lib/data";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
+import { Suspense } from "react";
 
 const page = async ({
   searchParams
@@ -62,7 +63,9 @@ const page = async ({
         data={teachers}
       />
       {/* Bottom */}
-      <Pagination page={p} count={count} />
+      <Suspense fallback={<p>Loading.....</p>}>
+        <Pagination page={p} count={count} />
+      </Suspense>
     </div>
   );
 };

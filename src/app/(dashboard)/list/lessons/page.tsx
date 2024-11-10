@@ -7,6 +7,7 @@ import { lessonColumns } from "@/constants/constants";
 import { renderLessonTableRow } from "@/helpers/helpers";
 import { lessonsData, role } from "@/lib/data";
 import Image from "next/image";
+import { Suspense } from "react";
 
 const page = () => {
   return (
@@ -40,7 +41,9 @@ const page = () => {
         data={lessonsData}
       />
       {/* Bottom */}
-      <Pagination />
+      <Suspense fallback={<p>Loading.....</p>}>
+        <Pagination page={1} count={10} />
+      </Suspense>
     </div>
   );
 };

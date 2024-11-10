@@ -7,6 +7,7 @@ import { subjectColumns } from "@/constants/constants";
 import { renderSubjectTableRow } from "@/helpers/helpers";
 import { role, subjectsData } from "@/lib/data";
 import Image from "next/image";
+import { Suspense } from "react";
 
 const page = () => {
   return (
@@ -40,7 +41,9 @@ const page = () => {
         data={subjectsData}
       />
       {/* Bottom */}
-      <Pagination />
+      <Suspense fallback={<p>Loading.....</p>}>
+        <Pagination page={1} count={10} />
+      </Suspense>
     </div>
   );
 };

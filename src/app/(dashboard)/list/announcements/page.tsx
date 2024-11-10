@@ -7,6 +7,7 @@ import { announcementsColumns } from "@/constants/constants";
 import { renderAnnouncementsTableRow } from "@/helpers/helpers";
 import { announcementsData, role } from "@/lib/data";
 import Image from "next/image";
+import { Suspense } from "react";
 
 const page = () => {
   return (
@@ -29,7 +30,9 @@ const page = () => {
             >
               <Image src="/sort.png" alt="photo" width={14} height={14} />
             </Button>
-            {role === "admin" && <FormModal type="create" table="announcement" />}
+            {role === "admin" && (
+              <FormModal type="create" table="announcement" />
+            )}
           </div>
         </div>
       </div>
@@ -40,7 +43,9 @@ const page = () => {
         data={announcementsData}
       />
       {/* Bottom */}
-      <Pagination />
+      <Suspense fallback={<p>Loading ......</p>}>
+        <Pagination page={1} count={10} />
+      </Suspense>
     </div>
   );
 };

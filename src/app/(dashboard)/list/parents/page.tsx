@@ -7,6 +7,7 @@ import { parentsColumns } from "@/constants/constants";
 import { renderParentTableRow } from "@/helpers/helpers";
 import { parentsData, role } from "@/lib/data";
 import Image from "next/image";
+import { Suspense } from "react";
 
 const page = () => {
   return (
@@ -40,7 +41,9 @@ const page = () => {
         data={parentsData}
       />
       {/* Bottom */}
-      <Pagination />
+      <Suspense fallback={<p>Loading.....</p>}>
+        <Pagination page={1} count={10} />
+      </Suspense>
     </div>
   );
 };

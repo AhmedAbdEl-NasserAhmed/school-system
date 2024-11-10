@@ -7,6 +7,7 @@ import { classColumns } from "@/constants/constants";
 import { renderClassTableRow } from "@/helpers/helpers";
 import { classesData, role } from "@/lib/data";
 import Image from "next/image";
+import { Suspense } from "react";
 
 const page = () => {
   return (
@@ -40,7 +41,9 @@ const page = () => {
         data={classesData}
       />
       {/* Bottom */}
-      <Pagination />
+      <Suspense fallback={<p>Loading.....</p>}>
+        <Pagination page={1} count={10} />
+      </Suspense>
     </div>
   );
 };
