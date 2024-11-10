@@ -3,13 +3,55 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import { classColumns } from "@/constants/constants";
+import { classColumns, ITEMS_PER_PAGE } from "@/constants/constants";
 import { renderClassTableRow } from "@/helpers/helpers";
-import { classesData, role } from "@/lib/data";
+import { role } from "@/lib/data";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
-const page = () => {
+const page = async ({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  const query: Prisma.ClassWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "supervisorId":
+            query.supervisorId = value;
+            break;
+          case "search":
+            query.name = { contains: value, mode: "insensitive" };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const [classes, count] = await prisma.$transaction([
+    prisma.class.findMany({
+      where: query,
+      include: {
+        supervisor: true
+      },
+      take: ITEMS_PER_PAGE,
+      skip: ITEMS_PER_PAGE * (p - 1)
+    }),
+
+    prisma.class.count({ where: query })
+  ]);
+
   return (
     <div className="bg-white mt-4 m-4 grow rounded-md p-4">
       {/* Top */}
@@ -38,11 +80,11 @@ const page = () => {
       <Table
         columns={classColumns}
         renderRow={renderClassTableRow}
-        data={classesData}
+        data={classes}
       />
       {/* Bottom */}
       <Suspense fallback={<p>Loading.....</p>}>
-        <Pagination page={1} count={10} />
+        <Pagination page={p} count={count} />
       </Suspense>
     </div>
   );

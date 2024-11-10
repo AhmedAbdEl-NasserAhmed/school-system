@@ -7,6 +7,7 @@ import { ITEMS_PER_PAGE, teachersColumns } from "@/constants/constants";
 import { renderTeacherTableRow } from "@/helpers/helpers";
 import { role } from "@/lib/data";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
@@ -15,12 +16,36 @@ const page = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { page } = searchParams;
+  const { page, ...queryParams } = searchParams;
 
   const p = page ? parseInt(page) : 1;
 
+  const query: Prisma.TeacherWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "classId":
+            query.lessons = {
+              some: {
+                classId: parseInt(value)
+              }
+            };
+            break;
+          case "search":
+            query.name = { contains: value, mode: "insensitive" };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
   const [teachers, count] = await prisma.$transaction([
     prisma.teacher.findMany({
+      where: query,
       include: {
         classes: true,
         subjects: true
@@ -29,7 +54,7 @@ const page = async ({
       skip: ITEMS_PER_PAGE * (p - 1)
     }),
 
-    prisma.teacher.count()
+    prisma.teacher.count({ where: query })
   ]);
 
   return (

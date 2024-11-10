@@ -14,6 +14,10 @@ const Input = ({
   defaultvalue,
   disabled
 }: InputProps) => {
+
+
+
+  
   return (
     <div className="flex flex-col gap-2 md:w-1/4 w-full">
       {label && <label className="text-xs text-gray-500 ">{label}</label>}

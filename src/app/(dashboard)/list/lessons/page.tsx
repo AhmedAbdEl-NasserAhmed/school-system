@@ -3,13 +3,57 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import { lessonColumns } from "@/constants/constants";
+import { ITEMS_PER_PAGE, lessonColumns } from "@/constants/constants";
 import { renderLessonTableRow } from "@/helpers/helpers";
-import { lessonsData, role } from "@/lib/data";
+import { role } from "@/lib/data";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
-const page = () => {
+const page = async ({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  const query: Prisma.LessonWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "teacherId":
+            query.teacherId = value;
+            break;
+          case "search":
+            query.name = { contains: value, mode: "insensitive" };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const [lessons, count] = await prisma.$transaction([
+    prisma.lesson.findMany({
+      where: query,
+      include: {
+        subject: { select: { name: true } },
+        class: { select: { name: true } },
+        teacher: { select: { name: true, surname: true } }
+      },
+      take: ITEMS_PER_PAGE,
+      skip: ITEMS_PER_PAGE * (p - 1)
+    }),
+
+    prisma.lesson.count({ where: query })
+  ]);
+
   return (
     <div className="bg-white mt-4 m-4 grow rounded-md p-4">
       {/* Top */}
@@ -38,11 +82,11 @@ const page = () => {
       <Table
         columns={lessonColumns}
         renderRow={renderLessonTableRow}
-        data={lessonsData}
+        data={lessons}
       />
       {/* Bottom */}
       <Suspense fallback={<p>Loading.....</p>}>
-        <Pagination page={1} count={10} />
+        <Pagination page={p} count={count} />
       </Suspense>
     </div>
   );

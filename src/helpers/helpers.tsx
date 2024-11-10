@@ -3,17 +3,19 @@ import FormModal from "@/components/FormModal";
 import {
   AnnouncementData,
   AssignmentData,
-  ClassData,
   EventData,
   ExamData,
-  LessonData,
-  ParentData,
-  ResultData,
-  StudentData,
-  SubjectData
+  ResultData
 } from "@/interfaces/interfaces";
 import { role } from "@/lib/data";
-import { TeacherList } from "@/types/types";
+import {
+  ClassList,
+  LessonList,
+  ParentList,
+  StudentList,
+  SubjectList,
+  TeacherList
+} from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -62,7 +64,7 @@ export const renderTeacherTableRow = (teacher: TeacherList) => {
             </Button>
           </Link>
           {role === "admin" && (
-            <FormModal type="delete" table="teacher" id={+teacher.id} />
+            <FormModal type="delete" table="teacher" id={teacher.id} />
           )}
         </div>
       </td>
@@ -70,7 +72,7 @@ export const renderTeacherTableRow = (teacher: TeacherList) => {
   );
 };
 
-export const renderStudentTableRow = (student: StudentData) => {
+export const renderStudentTableRow = (student: StudentList) => {
   return (
     <tr
       key={student.id}
@@ -79,21 +81,21 @@ export const renderStudentTableRow = (student: StudentData) => {
       <td className="flex items-center gap-4 p-3">
         <Image
           className="md:hidden xl:block w-10 h-10 rounded-full object-cover"
-          src={student.photo}
+          src={student.img || "/noAvatar.png"}
           alt="profile"
           width={40}
           height={40}
         />
         <div className=" flex flex-col ">
           <h3 className="font-semibold">{student.name}</h3>
-          <p className="text-xs text-gray-500">{student.class}</p>
+          <p className="text-xs text-gray-500">{student.class.name}</p>
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{student.studentId}</h2>
+        <h2>{student.username}</h2>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{student.grade}</h2>
+        <h2>{student.class.name[0]}</h2>
       </td>
       <td className="hidden lg:table-cell">
         <h2>{student.phone}</h2>
@@ -118,7 +120,7 @@ export const renderStudentTableRow = (student: StudentData) => {
   );
 };
 
-export const renderParentTableRow = (parent: ParentData) => {
+export const renderParentTableRow = (parent: ParentList) => {
   return (
     <tr
       key={parent.id}
@@ -131,7 +133,7 @@ export const renderParentTableRow = (parent: ParentData) => {
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{parent.students.join(",")}</h2>
+        <h2>{parent.students.map((student) => student.name).join(",")}</h2>
       </td>
 
       <td className="hidden lg:table-cell">
@@ -154,7 +156,7 @@ export const renderParentTableRow = (parent: ParentData) => {
   );
 };
 
-export const renderSubjectTableRow = (subject: SubjectData) => {
+export const renderSubjectTableRow = (subject: SubjectList) => {
   return (
     <tr
       key={subject.id}
@@ -164,7 +166,7 @@ export const renderSubjectTableRow = (subject: SubjectData) => {
         <h3 className="font-semibold">{subject.name}</h3>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{subject.teachers.join(",")}</h2>
+        <h2>{subject.teachers.map((teacher) => teacher.name).join(",")}</h2>
       </td>
 
       <td>
@@ -181,7 +183,7 @@ export const renderSubjectTableRow = (subject: SubjectData) => {
   );
 };
 
-export const renderClassTableRow = (classData: ClassData) => {
+export const renderClassTableRow = (classData: ClassList) => {
   return (
     <tr
       key={classData.id}
@@ -197,10 +199,10 @@ export const renderClassTableRow = (classData: ClassData) => {
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{classData.grade}</h2>
+        <h2>{classData.name[0]}</h2>
       </td>
       <td className="hidden lg:table-cell">
-        <h2>{classData.supervisor}</h2>
+        <h2>{classData.supervisor.name}</h2>
       </td>
       <td>
         <div className="flex items-center gap-3">
@@ -215,7 +217,7 @@ export const renderClassTableRow = (classData: ClassData) => {
     </tr>
   );
 };
-export const renderLessonTableRow = (lesson: LessonData) => {
+export const renderLessonTableRow = (lesson: LessonList) => {
   return (
     <tr
       key={lesson.id}
@@ -223,15 +225,15 @@ export const renderLessonTableRow = (lesson: LessonData) => {
     >
       <td className="p-3">
         <div className=" flex flex-col ">
-          <h3 className="font-semibold">{lesson.subject}</h3>
+          <h3 className="font-semibold">{lesson.subject.name}</h3>
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{lesson.class}</h2>
+        <h2>{lesson.class.name}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{lesson.teacher}</h2>
+        <h2>{lesson.teacher.name}</h2>
       </td>
 
       <td>

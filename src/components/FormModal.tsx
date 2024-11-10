@@ -40,7 +40,7 @@ const FormModal = ({
     | "event"
     | "announcement";
   type: "create" | "update" | "delete";
-  id?: number;
+  id?: number | string;
   data?: any;
 }) => {
   const size = `${type === "create" ? "w-8 h-8" : "w-7 h-7"}`;

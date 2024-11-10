@@ -3,13 +3,52 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import { subjectColumns } from "@/constants/constants";
+import { ITEMS_PER_PAGE, subjectColumns } from "@/constants/constants";
 import { renderSubjectTableRow } from "@/helpers/helpers";
-import { role, subjectsData } from "@/lib/data";
+import { role } from "@/lib/data";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
-const page = () => {
+const page = async ({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  const query: Prisma.SubjectWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "search":
+            query.name = { contains: value, mode: "insensitive" };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const [subjects, count] = await prisma.$transaction([
+    prisma.subject.findMany({
+      where: query,
+      include: {
+        teachers: true
+      },
+      take: ITEMS_PER_PAGE,
+      skip: ITEMS_PER_PAGE * (p - 1)
+    }),
+
+    prisma.subject.count({ where: query })
+  ]);
+
   return (
     <div className="bg-white mt-4 m-4 grow rounded-md p-4">
       {/* Top */}
@@ -38,11 +77,11 @@ const page = () => {
       <Table
         columns={subjectColumns}
         renderRow={renderSubjectTableRow}
-        data={subjectsData}
+        data={subjects}
       />
       {/* Bottom */}
       <Suspense fallback={<p>Loading.....</p>}>
-        <Pagination page={1} count={10} />
+        <Pagination page={p} count={count} />
       </Suspense>
     </div>
   );

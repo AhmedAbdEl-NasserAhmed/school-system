@@ -105,8 +105,11 @@ const SingleStudentPage = ({ params }: { params: { id: string } }) => {
             <Link className="p-3 rounded-md bg-customColorSkyLight" href="">
               Student&apos;s Classes
             </Link>
-            <Link className="p-3 rounded-md bg-customColorPurpleLight" href="">
-              Student&apos;s Students
+            <Link
+              className="p-3 rounded-md bg-customColorPurpleLight"
+              href={`/list/teachers?classId=${5}`}
+            >
+              Student&apos;s Teachers
             </Link>
             <Link className="p-3 rounded-md bg-customColorYellowLight" href="">
               Student&apos;s Lessons
