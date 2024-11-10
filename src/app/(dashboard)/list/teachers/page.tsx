@@ -3,12 +3,34 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import { teachersColumns } from "@/constants/constants";
+import { ITEMS_PER_PAGE, teachersColumns } from "@/constants/constants";
 import { renderTeacherTableRow } from "@/helpers/helpers";
-import { role, teachersData } from "@/lib/data";
+import { role } from "@/lib/data";
+import prisma from "@/lib/prisma";
 import Image from "next/image";
 
-const page = () => {
+const page = async ({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  const [teachers, count] = await prisma.$transaction([
+    prisma.teacher.findMany({
+      include: {
+        classes: true,
+        subjects: true
+      },
+      take: ITEMS_PER_PAGE,
+      skip: ITEMS_PER_PAGE * (p - 1)
+    }),
+
+    prisma.teacher.count()
+  ]);
+
   return (
     <div className="bg-white mt-4 m-4 grow rounded-md p-4">
       {/* Top */}
@@ -37,10 +59,10 @@ const page = () => {
       <Table
         columns={teachersColumns}
         renderRow={renderTeacherTableRow}
-        data={teachersData}
+        data={teachers}
       />
       {/* Bottom */}
-      <Pagination />
+      <Pagination page={p} count={count} />
     </div>
   );
 };

@@ -9,8 +9,6 @@ import Link from "next/link";
 const SingleStudentPage = ({ params }: { params: { id: string } }) => {
   const student = studentsData.find((studnet) => studnet.id === +params.id);
 
-  console.log(student);
-
   return (
     <div className="flex-1 p-4 flex flex-col xl:flex-row gap-4">
       {/* Left */}

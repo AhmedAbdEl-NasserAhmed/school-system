@@ -9,8 +9,6 @@ import Link from "next/link";
 const SingleTeacherPage = ({ params }: { params: { id: string } }) => {
   const teacher = teachersData.find((teacher) => teacher.id === +params.id);
 
-  console.log(teacher);
-
   return (
     <div className="flex-1 p-4 flex flex-col xl:flex-row gap-4">
       {/* Left */}

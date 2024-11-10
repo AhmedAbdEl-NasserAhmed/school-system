@@ -1,17 +1,5 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 
-export interface TeacherData {
-  id: number;
-  teacherId: string;
-  name: string;
-  email: string;
-  photo: string;
-  phone: string;
-  subjects: string[];
-  classes: string[];
-  address: string;
-}
-
 export interface StudentData {
   id: number;
   studentId: string;

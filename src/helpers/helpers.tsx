@@ -10,14 +10,14 @@ import {
   ParentData,
   ResultData,
   StudentData,
-  SubjectData,
-  TeacherData
+  SubjectData
 } from "@/interfaces/interfaces";
 import { role } from "@/lib/data";
+import { TeacherList } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 
-export const renderTeacherTableRow = (teacher: TeacherData) => {
+export const renderTeacherTableRow = (teacher: TeacherList) => {
   return (
     <tr
       key={teacher.id}
@@ -26,7 +26,7 @@ export const renderTeacherTableRow = (teacher: TeacherData) => {
       <td className="flex items-center gap-4 p-3">
         <Image
           className="md:hidden xl:block w-10 h-10 rounded-full object-cover"
-          src={teacher.photo}
+          src={teacher.img || "/noAvatar.png"}
           alt="profile"
           width={40}
           height={40}
@@ -37,13 +37,13 @@ export const renderTeacherTableRow = (teacher: TeacherData) => {
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{teacher.teacherId}</h2>
+        <h2>{teacher.username}</h2>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{teacher.subjects.join(",")}</h2>
+        {teacher.subjects.map((subject) => subject.name).join(",")}
       </td>
       <td className="hidden md:table-cell">
-        <h2>{teacher.classes.join(",")}</h2>
+        {teacher.classes.map((classObject) => classObject.name).join(",")}
       </td>
       <td className="hidden lg:table-cell">
         <h2>{teacher.phone}</h2>
@@ -62,7 +62,7 @@ export const renderTeacherTableRow = (teacher: TeacherData) => {
             </Button>
           </Link>
           {role === "admin" && (
-            <FormModal type="delete" table="teacher" id={teacher.id} />
+            <FormModal type="delete" table="teacher" id={+teacher.id} />
           )}
         </div>
       </td>

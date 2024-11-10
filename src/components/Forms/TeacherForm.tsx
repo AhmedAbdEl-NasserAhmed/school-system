@@ -24,11 +24,7 @@ const TeacherForm = ({
     mode: "onChange"
   });
 
-  console.log("errors", errors);
-
   function omSubmit() {}
-
-  console.log(data);
 
   return (
     <form
