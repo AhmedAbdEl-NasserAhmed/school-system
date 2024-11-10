@@ -102,8 +102,11 @@ const SingleStudentPage = ({ params }: { params: { id: string } }) => {
         <div className="bg-white p-4 rounded-md">
           <h1 className="text-xl font-semibold">Shortcuts</h1>
           <div className="flex flex-wrap mt-4 gap-4 text-xs text-gray-500">
-            <Link className="p-3 rounded-md bg-customColorSkyLight" href="">
-              Student&apos;s Classes
+            <Link
+              className="p-3 rounded-md bg-customColorSkyLight"
+              href={`/list/lessons?classId=${5}`}
+            >
+              Student&apos;s Lessons
             </Link>
             <Link
               className="p-3 rounded-md bg-customColorPurpleLight"
@@ -111,14 +114,23 @@ const SingleStudentPage = ({ params }: { params: { id: string } }) => {
             >
               Student&apos;s Teachers
             </Link>
-            <Link className="p-3 rounded-md bg-customColorYellowLight" href="">
-              Student&apos;s Lessons
-            </Link>
-            <Link className="p-3 rounded-md bg-pink-50" href="">
+            <Link
+              className="p-3 rounded-md bg-customColorYellowLight"
+              href={`/list/exams?classId=${5}`}
+            >
               Student&apos;s Exams
             </Link>
-            <Link className="p-3 rounded-md bg-customColorSkyLight" href="">
+            <Link
+              className="p-3 rounded-md bg-pink-50"
+              href={`/list/assignments?classId=${5}`}
+            >
               Student&apos;s Assignments
+            </Link>
+            <Link
+              className="p-3 rounded-md bg-customColorSkyLight"
+              href={`/list/results?studentId=${"student2"}`}
+            >
+              Student&apos;s Results
             </Link>
           </div>
         </div>

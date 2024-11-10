@@ -216,8 +216,8 @@ export const assignmentColumns = [
 
 export const resultsColumns = [
   {
-    name: "Subject ",
-    accessor: "subject"
+    name: "Title ",
+    accessor: "title"
   },
   {
     name: "Student",

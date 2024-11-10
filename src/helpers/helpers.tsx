@@ -1,17 +1,15 @@
 import Button from "@/components/Button";
 import FormModal from "@/components/FormModal";
-import {
-  AnnouncementData,
-  AssignmentData,
-  EventData,
-  ExamData,
-  ResultData
-} from "@/interfaces/interfaces";
 import { role } from "@/lib/data";
 import {
+  AnnouncementList,
+  AssignmentList,
   ClassList,
+  EventList,
+  ExamList,
   LessonList,
   ParentList,
+  ResultList,
   StudentList,
   SubjectList,
   TeacherList
@@ -249,7 +247,7 @@ export const renderLessonTableRow = (lesson: LessonList) => {
     </tr>
   );
 };
-export const renderExamsTableRow = (exam: ExamData) => {
+export const renderExamsTableRow = (exam: ExamList) => {
   return (
     <tr
       key={exam.id}
@@ -257,19 +255,19 @@ export const renderExamsTableRow = (exam: ExamData) => {
     >
       <td className="p-3">
         <div className=" flex flex-col ">
-          <h3 className="font-semibold">{exam.subject}</h3>
+          <h3 className="font-semibold">{exam.lesson.subject.name}</h3>
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{exam.class}</h2>
+        <h2>{exam.lesson.class.name}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{exam.teacher}</h2>
+        <h2>{exam.lesson.teacher.name}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{exam.date}</h2>
+        <h2>{formatTime(exam.startTime)}</h2>
       </td>
 
       <td>
@@ -286,7 +284,7 @@ export const renderExamsTableRow = (exam: ExamData) => {
   );
 };
 
-export const renderAssignmentsTableRow = (assignment: AssignmentData) => {
+export const renderAssignmentsTableRow = (assignment: AssignmentList) => {
   return (
     <tr
       key={assignment.id}
@@ -294,19 +292,19 @@ export const renderAssignmentsTableRow = (assignment: AssignmentData) => {
     >
       <td className="p-3">
         <div className=" flex flex-col ">
-          <h3 className="font-semibold">{assignment.subject}</h3>
+          <h3 className="font-semibold">{assignment.lesson.subject.name}</h3>
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{assignment.class}</h2>
+        <h2>{assignment.lesson.class.name}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{assignment.teacher}</h2>
+        <h2>{assignment.lesson.teacher.name}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{assignment.dueDate}</h2>
+        <h2>{formatTime(assignment.dueDate)}</h2>
       </td>
 
       <td>
@@ -322,7 +320,7 @@ export const renderAssignmentsTableRow = (assignment: AssignmentData) => {
     </tr>
   );
 };
-export const renderResultsTableRow = (result: ResultData) => {
+export const renderResultsTableRow = (result: ResultList) => {
   return (
     <tr
       key={result.id}
@@ -330,11 +328,11 @@ export const renderResultsTableRow = (result: ResultData) => {
     >
       <td className="p-3">
         <div className=" flex flex-col ">
-          <h3 className="font-semibold">{result.subject}</h3>
+          <h3 className="font-semibold">{result.title}</h3>
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{result.student}</h2>
+        <h2>{result.studentName}</h2>
       </td>
 
       <td className="hidden md:table-cell">
@@ -342,15 +340,15 @@ export const renderResultsTableRow = (result: ResultData) => {
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{result.teacher}</h2>
+        <h2>{result.teacherName}</h2>
       </td>
 
       <td className="hidden lg:table-cell">
-        <h2>{result.class}</h2>
+        <h2>{result.className}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{result.date}</h2>
+        <h2>{formatTime(result.startTime)}</h2>
       </td>
 
       <td>
@@ -366,7 +364,7 @@ export const renderResultsTableRow = (result: ResultData) => {
     </tr>
   );
 };
-export const renderEventTableRow = (event: EventData) => {
+export const renderEventTableRow = (event: EventList) => {
   return (
     <tr
       key={event.id}
@@ -378,19 +376,31 @@ export const renderEventTableRow = (event: EventData) => {
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{event.class}</h2>
+        <h2>{event.class.name}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{event.date}</h2>
+        <h2>{formatTime(event.startTime)}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{event.startTime}</h2>
+        <h2>
+          {formatTime(event.startTime, {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+          })}
+        </h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{event.endTime}</h2>
+        <h2>
+          {formatTime(event.endTime, {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+          })}
+        </h2>
       </td>
       <td>
         <div className="flex items-center gap-3">
@@ -405,7 +415,7 @@ export const renderEventTableRow = (event: EventData) => {
     </tr>
   );
 };
-export const renderAnnouncementsTableRow = (announcement: AnnouncementData) => {
+export const renderAnnouncementsTableRow = (announcement: AnnouncementList) => {
   return (
     <tr
       key={announcement.id}
@@ -417,11 +427,11 @@ export const renderAnnouncementsTableRow = (announcement: AnnouncementData) => {
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{announcement.class}</h2>
+        <h2>{announcement.class.name}</h2>
       </td>
 
       <td className="hidden md:table-cell">
-        <h2>{announcement.date}</h2>
+        <h2>{formatTime(announcement.startTime)}</h2>
       </td>
 
       <td>
@@ -445,3 +455,7 @@ export const renderAnnouncementsTableRow = (announcement: AnnouncementData) => {
     </tr>
   );
 };
+
+function formatTime(Date: Date, options: Intl.DateTimeFormatOptions = {}) {
+  return new Intl.DateTimeFormat("en-US", options).format(Date);
+}

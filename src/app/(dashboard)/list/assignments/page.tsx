@@ -3,13 +3,70 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import { assignmentColumns } from "@/constants/constants";
+import { assignmentColumns, ITEMS_PER_PAGE } from "@/constants/constants";
 import { renderAssignmentsTableRow } from "@/helpers/helpers";
-import { assignmentsData, role } from "@/lib/data";
+import { role } from "@/lib/data";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
-const page = () => {
+const page = async ({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  const query: Prisma.AssignmentWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "classId":
+            query.lesson = { classId: parseInt(value) };
+            break;
+          case "teacherId":
+            query.lesson = {
+              teacherId: value
+            };
+            break;
+          case "search":
+            query.lesson = {
+              subject: {
+                name: { contains: value, mode: "insensitive" }
+              }
+            };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const [assignments, count] = await prisma.$transaction([
+    prisma.assignment.findMany({
+      where: query,
+      include: {
+        lesson: {
+          select: {
+            subject: { select: { name: true } },
+            teacher: { select: { name: true } },
+            class: { select: { name: true } }
+          }
+        }
+      },
+      take: ITEMS_PER_PAGE,
+      skip: ITEMS_PER_PAGE * (p - 1)
+    }),
+
+    prisma.assignment.count({ where: query })
+  ]);
+
   return (
     <div className="bg-white mt-4 m-4 grow rounded-md p-4">
       {/* Top */}
@@ -38,11 +95,11 @@ const page = () => {
       <Table
         columns={assignmentColumns}
         renderRow={renderAssignmentsTableRow}
-        data={assignmentsData}
+        data={assignments}
       />
       {/* Bottom */}
       <Suspense fallback={<p>Loading.....</p>}>
-        <Pagination page={1} count={10} />
+        <Pagination page={p} count={count} />
       </Suspense>
     </div>
   );

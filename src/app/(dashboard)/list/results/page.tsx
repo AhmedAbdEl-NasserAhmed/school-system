@@ -3,13 +3,98 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import { resultsColumns } from "@/constants/constants";
+import { ITEMS_PER_PAGE, resultsColumns } from "@/constants/constants";
 import { renderResultsTableRow } from "@/helpers/helpers";
-import { resultsData, role } from "@/lib/data";
+import { role } from "@/lib/data";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { Suspense } from "react";
 
-const page = () => {
+const page = async ({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  const query: Prisma.ResultWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "studentId":
+            query.studentId = value;
+            break;
+          case "search":
+            query.OR = [
+              {
+                exam: { title: { contains: value, mode: "insensitive" } },
+                student: { name: { contains: value, mode: "insensitive" } }
+              }
+            ];
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const [resultsResponse, count] = await prisma.$transaction([
+    prisma.result.findMany({
+      where: query,
+      include: {
+        student: { select: { name: true, surname: true } },
+        exam: {
+          include: {
+            lesson: {
+              select: {
+                class: { select: { name: true } },
+                teacher: { select: { name: true } }
+              }
+            }
+          }
+        },
+        assignment: {
+          include: {
+            lesson: {
+              select: {
+                class: { select: { name: true } },
+                teacher: { select: { name: true } }
+              }
+            }
+          }
+        }
+      },
+      take: ITEMS_PER_PAGE,
+      skip: ITEMS_PER_PAGE * (p - 1)
+    }),
+
+    prisma.result.count({ where: query })
+  ]);
+
+  const results = resultsResponse.map((result) => {
+    const assessment = result.exam || result.assignment;
+
+    if (!assessment) return null;
+
+    const isExam = "startTime" in assessment;
+
+    return {
+      id: result.id,
+      title: assessment.title,
+      studentName: result.student.name,
+      teacherName: assessment.lesson.teacher.name,
+      score: result.score,
+      className: assessment.lesson.class.name,
+      startTime: isExam ? assessment.startTime : assessment.startDate
+    };
+  });
+
   return (
     <div className="bg-white mt-4 m-4 grow rounded-md p-4">
       {/* Top */}
@@ -38,11 +123,11 @@ const page = () => {
       <Table
         columns={resultsColumns}
         renderRow={renderResultsTableRow}
-        data={resultsData}
+        data={results}
       />
       {/* Bottom */}
       <Suspense fallback={<p>Loading.....</p>}>
-        <Pagination page={1} count={10} />
+        <Pagination page={p} count={count} />
       </Suspense>
     </div>
   );
