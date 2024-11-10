@@ -5,14 +5,12 @@ import Button from "./Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const Pagination = ({ page, count }: { page: number; count: number }) => {
-  const searchParams = useSearchParams();
-
   const pathName = usePathname();
 
   const { push } = useRouter();
 
   function handleChangePage(newPage: number) {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(window.location.search);
 
     params.set("page", newPage.toString());
 

@@ -1,23 +1,4 @@
-export const announcements = [
-  {
-    id: 1,
-    title: "Team Outing",
-    date: "2024-11-15",
-    description: "Join us for a fun day out with the team."
-  },
-  {
-    id: 2,
-    title: "Product Launch",
-    date: "2024-12-01",
-    description: "Exciting new product release; don’t miss it!"
-  },
-  {
-    id: 3,
-    title: "Year-End Party",
-    date: "2024-12-20",
-    description: "Celebrate the year with food, music, and awards."
-  }
-];
+import { announcements } from "@/constants/constants";
 
 const Announcements = () => {
   return (

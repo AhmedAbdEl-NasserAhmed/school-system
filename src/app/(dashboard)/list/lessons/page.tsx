@@ -9,7 +9,6 @@ import { role } from "@/lib/data";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
-import { Suspense } from "react";
 
 const page = async ({
   searchParams
@@ -93,9 +92,7 @@ const page = async ({
         data={lessons}
       />
       {/* Bottom */}
-      <Suspense fallback={<p>Loading.....</p>}>
-        <Pagination page={p} count={count} />
-      </Suspense>
+      <Pagination page={p} count={count} />
     </div>
   );
 };

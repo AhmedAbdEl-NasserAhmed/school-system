@@ -7,14 +7,12 @@ import { useEffect, useState } from "react";
 const SearchBar = ({ className }: { className: string }) => {
   const [value, setValue] = useState<string>("");
 
-  const searchParams = useSearchParams();
-
   const pathName = usePathname();
 
   const { push } = useRouter();
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(window.location.search);
 
     params.set("search", value.toString());
 
