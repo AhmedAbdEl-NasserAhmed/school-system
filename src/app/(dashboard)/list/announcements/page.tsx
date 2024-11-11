@@ -3,10 +3,10 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import { announcementsColumns, ITEMS_PER_PAGE } from "@/constants/constants";
+import { generateColumns, ITEMS_PER_PAGE } from "@/constants/constants";
 import { renderAnnouncementsTableRow } from "@/helpers/helpers";
-import { role } from "@/lib/data";
 import prisma from "@/lib/prisma";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 
@@ -17,6 +17,12 @@ const page = async ({
     [key: string]: string | undefined;
   };
 }) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
+  const { userId } = await auth();
+
   const { page, ...queryParams } = searchParams;
 
   const p = page ? parseInt(page) : 1;
@@ -36,6 +42,19 @@ const page = async ({
       }
     }
   }
+
+  const roleConditions = {
+    teacher: { lessons: { some: { teacherId: userId! } } },
+    student: { students: { some: { id: userId! } } },
+    parent: { students: { some: { parentId: userId! } } }
+  };
+
+  query.OR = [
+    { classId: null },
+    {
+      class: roleConditions[role as keyof typeof roleConditions] || {}
+    }
+  ];
 
   const [announcements, count] = await prisma.$transaction([
     prisma.announcement.findMany({
@@ -78,7 +97,7 @@ const page = async ({
       </div>
       {/* Middle */}
       <Table
-        columns={announcementsColumns}
+        columns={generateColumns("announcements", role)}
         renderRow={renderAnnouncementsTableRow}
         data={announcements}
       />

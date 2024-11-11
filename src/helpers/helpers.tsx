@@ -1,6 +1,5 @@
 import Button from "@/components/Button";
 import FormModal from "@/components/FormModal";
-import { role } from "@/lib/data";
 import {
   AnnouncementList,
   AssignmentList,
@@ -14,10 +13,15 @@ import {
   SubjectList,
   TeacherList
 } from "@/types/types";
+import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 
-export const renderTeacherTableRow = (teacher: TeacherList) => {
+export const renderTeacherTableRow = async (teacher: TeacherList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={teacher.id}
@@ -70,7 +74,11 @@ export const renderTeacherTableRow = (teacher: TeacherList) => {
   );
 };
 
-export const renderStudentTableRow = (student: StudentList) => {
+export const renderStudentTableRow = async (student: StudentList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={student.id}
@@ -111,14 +119,19 @@ export const renderStudentTableRow = (student: StudentList) => {
               <Image src="/view.png" alt="" width={16} height={16} />
             </Button>
           </Link>
-          <FormModal type="delete" table="student" id={student.id} />
+          {role === "admin" && (
+            <FormModal type="delete" table="student" id={student.id} />
+          )}
         </div>
       </td>
     </tr>
   );
 };
 
-export const renderParentTableRow = (parent: ParentList) => {
+export const renderParentTableRow = async (parent: ParentList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
   return (
     <tr
       key={parent.id}
@@ -154,7 +167,11 @@ export const renderParentTableRow = (parent: ParentList) => {
   );
 };
 
-export const renderSubjectTableRow = (subject: SubjectList) => {
+export const renderSubjectTableRow = async (subject: SubjectList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={subject.id}
@@ -181,7 +198,11 @@ export const renderSubjectTableRow = (subject: SubjectList) => {
   );
 };
 
-export const renderClassTableRow = (classData: ClassList) => {
+export const renderClassTableRow = async (classData: ClassList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={classData.id}
@@ -215,7 +236,11 @@ export const renderClassTableRow = (classData: ClassList) => {
     </tr>
   );
 };
-export const renderLessonTableRow = (lesson: LessonList) => {
+export const renderLessonTableRow = async (lesson: LessonList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={lesson.id}
@@ -247,7 +272,11 @@ export const renderLessonTableRow = (lesson: LessonList) => {
     </tr>
   );
 };
-export const renderExamsTableRow = (exam: ExamList) => {
+export const renderExamsTableRow = async (exam: ExamList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={exam.id}
@@ -272,19 +301,24 @@ export const renderExamsTableRow = (exam: ExamList) => {
 
       <td>
         <div className="flex items-center gap-3">
-          {role === "admin" && (
-            <>
-              <FormModal type="update" table="exam" data={exam} />
-              <FormModal type="delete" table="exam" id={exam.id} />
-            </>
-          )}
+          {role === "admin" ||
+            (role === "teacher" && (
+              <>
+                <FormModal type="update" table="exam" data={exam} />
+                <FormModal type="delete" table="exam" id={exam.id} />
+              </>
+            ))}
         </div>
       </td>
     </tr>
   );
 };
 
-export const renderAssignmentsTableRow = (assignment: AssignmentList) => {
+export const renderAssignmentsTableRow = async (assignment: AssignmentList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={assignment.id}
@@ -309,18 +343,27 @@ export const renderAssignmentsTableRow = (assignment: AssignmentList) => {
 
       <td>
         <div className="flex items-center gap-3">
-          {role === "admin" && (
-            <>
-              <FormModal type="update" table="assignment" data={assignment} />
-              <FormModal type="delete" table="assignment" id={assignment.id} />
-            </>
-          )}
+          {role === "admin" ||
+            (role === "teacher" && (
+              <>
+                <FormModal type="update" table="assignment" data={assignment} />
+                <FormModal
+                  type="delete"
+                  table="assignment"
+                  id={assignment.id}
+                />
+              </>
+            ))}
         </div>
       </td>
     </tr>
   );
 };
-export const renderResultsTableRow = (result: ResultList) => {
+export const renderResultsTableRow = async (result: ResultList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={result.id}
@@ -364,7 +407,11 @@ export const renderResultsTableRow = (result: ResultList) => {
     </tr>
   );
 };
-export const renderEventTableRow = (event: EventList) => {
+export const renderEventTableRow = async (event: EventList) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={event.id}
@@ -376,7 +423,7 @@ export const renderEventTableRow = (event: EventList) => {
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{event.class.name}</h2>
+        <h2>{event.class?.name || "-"}</h2>
       </td>
 
       <td className="hidden md:table-cell">
@@ -415,7 +462,13 @@ export const renderEventTableRow = (event: EventList) => {
     </tr>
   );
 };
-export const renderAnnouncementsTableRow = (announcement: AnnouncementList) => {
+export const renderAnnouncementsTableRow = async (
+  announcement: AnnouncementList
+) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   return (
     <tr
       key={announcement.id}
@@ -427,7 +480,7 @@ export const renderAnnouncementsTableRow = (announcement: AnnouncementList) => {
         </div>
       </td>
       <td className="hidden md:table-cell">
-        <h2>{announcement.class.name}</h2>
+        <h2>{announcement.class?.name || "-"}</h2>
       </td>
 
       <td className="hidden md:table-cell">

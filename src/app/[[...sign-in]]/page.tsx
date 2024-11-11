@@ -15,12 +15,8 @@ const HomePage = () => {
   useEffect(() => {
     const role = user?.publicMetadata.role;
 
-    if (role) {
-      push(`/${role}`);
-    }
-  }, [user]);
-
-  console.log(user);
+    if (role) push(`/${role}`);
+  }, [user, push]);
 
   return (
     <div className="h-screen flex items-center justify-center bg-lamaSkyLight">
@@ -31,7 +27,7 @@ const HomePage = () => {
         >
           <h1 className="text-xl font-bold flex items-center gap-2">
             <Image src="/logo.png" alt="" width={24} height={24} />
-            SchooLama
+            School System
           </h1>
           <h2 className="text-gray-400">Sign in to your account</h2>
           <Clerk.GlobalError className="text-sm text-red-400" />

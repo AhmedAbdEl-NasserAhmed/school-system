@@ -3,10 +3,10 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import { ITEMS_PER_PAGE, teachersColumns } from "@/constants/constants";
+import { generateColumns, ITEMS_PER_PAGE } from "@/constants/constants";
 import { renderTeacherTableRow } from "@/helpers/helpers";
-import { role } from "@/lib/data";
 import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 
@@ -15,6 +15,10 @@ const page = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
+  const user = await currentUser();
+
+  const role = user?.publicMetadata.role as string;
+
   const { page, ...queryParams } = searchParams;
 
   const p = page ? parseInt(page) : 1;
@@ -82,7 +86,7 @@ const page = async ({
       </div>
       {/* Middle */}
       <Table
-        columns={teachersColumns}
+        columns={generateColumns("teachers", role)}
         renderRow={renderTeacherTableRow}
         data={teachers}
       />
