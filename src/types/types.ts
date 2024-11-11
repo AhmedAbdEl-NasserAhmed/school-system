@@ -55,3 +55,8 @@ export type ResultList = {
 export type EventList = Event & { class: Class };
 
 export type AnnouncementList = Event & { class: Class };
+
+
+export type RouteAccessMap = {
+  [key: string]: string[];
+};

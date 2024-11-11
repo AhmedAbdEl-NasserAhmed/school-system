@@ -1,8 +1,20 @@
+import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
-import React from "react";
 import SearchBar from "./SearchBar";
+import { currentUser } from "@clerk/nextjs/server";
+import { dark, neobrutalism } from "@clerk/themes";
 
-const NavBar = () => {
+const NavBar = async () => {
+  const user = await currentUser();
+
+  console.log(user);
+
+  const role = user?.publicMetadata.role as string;
+
+  const userName = user?.username as string;
+
+  const imgUrl = user?.imageUrl as string;
+
   return (
     <nav className="flex items-center  p-4">
       {/*Search Bar */}
@@ -25,15 +37,17 @@ const NavBar = () => {
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs leading-3 font-medium">John duo</span>
-          <span className="text-[10px] text-gray-500 text-right">Admin</span>
+          <span className="text-xs leading-3 font-medium">{userName}</span>
+          <span className="text-[10px] text-gray-500 text-right">{role}</span>
         </div>
-        <Image
-          className="rounded-full"
-          src="/avatar.png"
-          alt="avatar"
-          width={36}
-          height={36}
+        <UserButton
+          appearance={{
+            layout: {
+              shimmer: true,
+              termsPageUrl: "https://clerk.com/terms"
+            },
+            baseTheme: [dark, neobrutalism]
+          }}
         />
       </div>
     </nav>
