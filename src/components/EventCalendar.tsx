@@ -1,9 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
-import Events from "./Events";
+
+import { useRouter } from "next/navigation";
+import { formatTime } from "@/helpers/utils";
 
 const Calendar = dynamic(() => import("react-calendar"), {
   ssr: false,
@@ -21,10 +23,17 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 const EventCalendar = () => {
   const [value, onChange] = useState<Value>(new Date());
 
+  const { push } = useRouter();
+
+  useEffect(() => {
+    if (value instanceof Date) {
+      push(`?date=${formatTime(value)}`);
+    }
+  }, [value, push]);
+
   return (
-    <div className="bg-white p-4 rounded-md">
+    <div>
       <Calendar onChange={onChange} value={value} />
-      <Events />
     </div>
   );
 };

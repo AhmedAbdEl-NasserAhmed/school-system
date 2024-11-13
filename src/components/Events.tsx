@@ -1,27 +1,24 @@
+import { formatTime } from "@/helpers/utils";
+import prisma from "@/lib/prisma";
 import Image from "next/image";
 
-export const events = [
-  {
-    id: 1,
-    title: "Team Sync",
-    time: "9:00 AM - 10:00 AM",
-    description: "Weekly team catch-up and updates."
-  },
-  {
-    id: 2,
-    title: "Client Call",
-    time: "11:30 AM - 12:30 PM",
-    description: "Discuss project milestones with the client."
-  },
-  {
-    id: 3,
-    title: "Design Review",
-    time: "3:00 PM - 4:00 PM",
-    description: "Review latest designs with the team."
-  }
-];
+const Events = async ({ dateParams }: { dateParams: string }) => {
+  const date = dateParams ? new Date(dateParams) : new Date();
 
-const Events = () => {
+  const events = await prisma.event.findMany({
+    where: {
+      startTime: {
+        gte: new Date(date.setHours(0, 0, 0, 0)),
+        lte: new Date(date.setHours(23.59, 59, 999))
+      }
+    }
+  });
+
+  if (!events.length)
+    return (
+      <p className="font-semibold text-center mt-5">No Events for today</p>
+    );
+
   return (
     <ul className="flex flex-col gap-4 mt-5 ">
       <div className="flex justify-between items-center">
@@ -35,7 +32,9 @@ const Events = () => {
         >
           <div className="flex items-center justify-between">
             <h1 className="font-semibold text-gray-600">{event.title}</h1>
-            <span className="text-gray-300 text-xs">{event.time}</span>
+            <span className="text-gray-300 text-xs">
+              {formatTime(event.startTime)}
+            </span>
           </div>
           <p className="mt-2 text-gray-400 text-sm">{event.description}</p>
         </li>

@@ -16,6 +16,7 @@ import {
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
+import { formatTime } from "./utils";
 
 export const renderTeacherTableRow = async (teacher: TeacherList) => {
   const user = await currentUser();
@@ -510,6 +511,4 @@ export const renderAnnouncementsTableRow = async (
   );
 };
 
-function formatTime(Date: Date, options: Intl.DateTimeFormatOptions = {}) {
-  return new Intl.DateTimeFormat("en-US", options).format(Date);
-}
+
