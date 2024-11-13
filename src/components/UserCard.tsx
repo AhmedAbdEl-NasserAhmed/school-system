@@ -15,6 +15,9 @@ const UserCard = async ({
 
   const data = await modelMap[type].count();
 
+
+
+  
   return (
     <div className="rounded-2xl odd:bg-customColorPurple even:bg-customColorYellow p-4 grow min-w-[130px] ">
       <div className="flex justify-between items-center">
