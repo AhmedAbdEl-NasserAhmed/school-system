@@ -124,7 +124,7 @@ const Menu = async () => {
   const role = user?.publicMetadata.role as string;
 
   return (
-    <div className="mt-4 text-sm">
+    <div className="mt-4 text-sm h-screen">
       {menuItems.map((i) => {
         return (
           <div className="flex flex-col gap-2" key={i.title}>

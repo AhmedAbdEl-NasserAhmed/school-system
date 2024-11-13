@@ -6,7 +6,7 @@ import Table from "@/components/Table";
 import { generateColumns, ITEMS_PER_PAGE } from "@/constants/constants";
 import { renderResultsTableRow } from "@/helpers/helpers";
 import prisma from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 
@@ -18,6 +18,8 @@ const page = async ({
   const user = await currentUser();
 
   const role = user?.publicMetadata.role as string;
+
+  const { userId } = await auth();
 
   const { page, ...queryParams } = searchParams;
 
@@ -45,6 +47,27 @@ const page = async ({
         }
       }
     }
+  }
+
+  switch (role) {
+    case "admin":
+      break;
+    case "teacher":
+      query.OR = [
+        { exam: { lesson: { teacherId: userId! } } },
+        { assignment: { lesson: { teacherId: userId! } } }
+      ];
+      break;
+    case "student":
+      query.studentId = userId!;
+      break;
+    case "parent":
+      query.student = {
+        parentId: userId!
+      };
+      break;
+    default:
+      break;
   }
 
   const [resultsResponse, count] = await prisma.$transaction([

@@ -396,12 +396,13 @@ export const renderResultsTableRow = async (result: ResultList) => {
 
       <td>
         <div className="flex items-center gap-3">
-          {role === "admin" && (
-            <>
-              <FormModal type="update" table="result" data={result} />
-              <FormModal type="delete" table="result" id={result.id} />
-            </>
-          )}
+          {role === "admin" ||
+            (role === "teacher" && (
+              <>
+                <FormModal type="update" table="result" data={result} />
+                <FormModal type="delete" table="result" id={result.id} />
+              </>
+            ))}
         </div>
       </td>
     </tr>

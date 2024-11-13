@@ -296,7 +296,7 @@ export function generateColumns(type: string, role: string = "") {
           accessor: "date",
           className: "hidden md:table-cell"
         },
-        ...(role === "admin"
+        ...(role === "admin" || role === "teacher"
           ? [
               {
                 name: "Actions",

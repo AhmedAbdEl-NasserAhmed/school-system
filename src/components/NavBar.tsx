@@ -7,8 +7,6 @@ import { dark, neobrutalism } from "@clerk/themes";
 const NavBar = async () => {
   const user = await currentUser();
 
-  console.log(user);
-
   const role = user?.publicMetadata.role as string;
 
   const userName = user?.username as string;
