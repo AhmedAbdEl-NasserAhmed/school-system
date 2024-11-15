@@ -1,5 +1,5 @@
 import Button from "@/components/Button";
-import FormModal from "@/components/FormModal";
+
 import {
   AnnouncementList,
   AssignmentList,
@@ -17,6 +17,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import { formatTime } from "./utils";
+import FormContainer from "@/components/FormContainer";
 
 export const renderTeacherTableRow = async (teacher: TeacherList) => {
   const user = await currentUser();
@@ -67,7 +68,7 @@ export const renderTeacherTableRow = async (teacher: TeacherList) => {
             </Button>
           </Link>
           {role === "admin" && (
-            <FormModal type="delete" table="teacher" id={teacher.id} />
+            <FormContainer type="delete" table="teacher" id={teacher.id} />
           )}
         </div>
       </td>
@@ -121,7 +122,7 @@ export const renderStudentTableRow = async (student: StudentList) => {
             </Button>
           </Link>
           {role === "admin" && (
-            <FormModal type="delete" table="student" id={student.id} />
+            <FormContainer type="delete" table="student" id={student.id} />
           )}
         </div>
       </td>
@@ -158,8 +159,8 @@ export const renderParentTableRow = async (parent: ParentList) => {
         <div className="flex items-center gap-3">
           {role === "admin" && (
             <>
-              <FormModal type="update" table="parent" data={parent} />
-              <FormModal type="delete" table="parent" id={parent.id} />
+              <FormContainer type="update" table="parent" data={parent} />
+              <FormContainer type="delete" table="parent" id={parent.id} />
             </>
           )}
         </div>
@@ -189,8 +190,8 @@ export const renderSubjectTableRow = async (subject: SubjectList) => {
         <div className="flex items-center gap-3">
           {role === "admin" && (
             <>
-              <FormModal type="update" table="subject" data={subject} />
-              <FormModal type="delete" table="subject" id={subject.id} />
+              <FormContainer type="update" table="subject" data={subject} />
+              <FormContainer type="delete" table="subject" id={subject.id} />
             </>
           )}
         </div>
@@ -228,8 +229,8 @@ export const renderClassTableRow = async (classData: ClassList) => {
         <div className="flex items-center gap-3">
           {role === "admin" && (
             <>
-              <FormModal type="update" table="class" />
-              <FormModal type="delete" table="class" />
+              <FormContainer type="update" table="class" />
+              <FormContainer type="delete" table="class" />
             </>
           )}
         </div>
@@ -264,8 +265,8 @@ export const renderLessonTableRow = async (lesson: LessonList) => {
         <div className="flex items-center gap-3">
           {role === "admin" && (
             <>
-              <FormModal type="update" table="lesson" data={lesson} />
-              <FormModal type="delete" table="lesson" id={lesson.id} />
+              <FormContainer type="update" table="lesson" data={lesson} />
+              <FormContainer type="delete" table="lesson" id={lesson.id} />
             </>
           )}
         </div>
@@ -305,8 +306,8 @@ export const renderExamsTableRow = async (exam: ExamList) => {
           {role === "admin" ||
             (role === "teacher" && (
               <>
-                <FormModal type="update" table="exam" data={exam} />
-                <FormModal type="delete" table="exam" id={exam.id} />
+                <FormContainer type="update" table="exam" data={exam} />
+                <FormContainer type="delete" table="exam" id={exam.id} />
               </>
             ))}
         </div>
@@ -347,8 +348,8 @@ export const renderAssignmentsTableRow = async (assignment: AssignmentList) => {
           {role === "admin" ||
             (role === "teacher" && (
               <>
-                <FormModal type="update" table="assignment" data={assignment} />
-                <FormModal
+                <FormContainer type="update" table="assignment" data={assignment} />
+                <FormContainer
                   type="delete"
                   table="assignment"
                   id={assignment.id}
@@ -400,8 +401,8 @@ export const renderResultsTableRow = async (result: ResultList) => {
           {role === "admin" ||
             (role === "teacher" && (
               <>
-                <FormModal type="update" table="result" data={result} />
-                <FormModal type="delete" table="result" id={result.id} />
+                <FormContainer type="update" table="result" data={result} />
+                <FormContainer type="delete" table="result" id={result.id} />
               </>
             ))}
         </div>
@@ -455,8 +456,8 @@ export const renderEventTableRow = async (event: EventList) => {
         <div className="flex items-center gap-3">
           {role === "admin" && (
             <>
-              <FormModal type="update" table="event" data={event} />
-              <FormModal type="delete" table="event" id={event.id} />
+              <FormContainer type="update" table="event" data={event} />
+              <FormContainer type="delete" table="event" id={event.id} />
             </>
           )}
         </div>
@@ -493,12 +494,12 @@ export const renderAnnouncementsTableRow = async (
         <div className="flex items-center gap-3">
           {role === "admin" && (
             <>
-              <FormModal
+              <FormContainer
                 type="update"
                 table="announcement"
                 data={announcement}
               />
-              <FormModal
+              <FormContainer
                 type="delete"
                 table="announcement"
                 id={announcement.id}

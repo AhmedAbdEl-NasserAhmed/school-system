@@ -1,8 +1,8 @@
 import Announcements from "@/components/Announcements ";
-import BigCalendar from "@/components/BigCalendar";
+import BigCalendarContainer from "@/components/BigCalendarContainer";
 import Card from "@/components/Card";
 import StraightAnglePieChart from "@/components/StraightAnglePieChart";
-import { studentsData, teachersData } from "@/lib/data";
+import { studentsData } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -93,7 +93,7 @@ const SingleStudentPage = ({ params }: { params: { id: string } }) => {
         {/* Bottom */}
         <div className="mt-4 bg-white rouned-md p-4 h-[800px]">
           <h1>Student&apos;s Schedule </h1>
-          <BigCalendar />
+          <BigCalendarContainer />
         </div>
       </div>
       {/* Right */}

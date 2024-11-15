@@ -5,20 +5,22 @@ import Input from "../Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { subjectSchema } from "@/schemas/schemas";
 import { SubjectSchema } from "@/types/types";
-import { createSubject } from "@/lib/actions";
+import { createSubject, updateSubject } from "@/lib/actions";
 import { useFormState } from "react-dom";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
 const SubjectForm = ({
   type,
   data,
-  setOpenModal
+  setOpenModal,
+  relatedData
 }: {
   type: "create" | "update";
   data?: any;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  relatedData?: any;
 }) => {
   const {
     register,
@@ -28,12 +30,24 @@ const SubjectForm = ({
     resolver: zodResolver(subjectSchema)
   });
 
+  const [teachers, setTeachers] = useState([]);
+
+  useEffect(() => {
+    if (relatedData) {
+      const { teachers } = relatedData;
+      setTeachers(teachers);
+    }
+  }, [relatedData]);
+
   // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 
-  const [state, formAction] = useFormState(createSubject, {
-    success: false,
-    error: false
-  });
+  const [state, formAction] = useFormState(
+    type === "create" ? createSubject : updateSubject,
+    {
+      success: false,
+      error: false
+    }
+  );
   const { refresh } = useRouter();
 
   const onSubmit = handleSubmit((data) => {
@@ -46,7 +60,7 @@ const SubjectForm = ({
       refresh();
       setOpenModal(false);
     }
-  }, [state]);
+  }, [state, setOpenModal, refresh, type]);
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-8">
@@ -72,11 +86,11 @@ const SubjectForm = ({
             label="Id"
             register={{ ...register("id") }}
             errorMessage={errors["id"] && errors["id"]?.message?.toString()}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full hidden"
             type="text"
           />
         )}
-        {/* <div className="flex flex-col gap-2 w-full md:w-1/4">
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Teachers</label>
           <select
             multiple
@@ -84,7 +98,7 @@ const SubjectForm = ({
             {...register("teachers")}
             defaultValue={data?.teachers}
           >
-            {teachers.map(
+            {teachers?.map(
               (teacher: { id: string; name: string; surname: string }) => (
                 <option value={teacher.id} key={teacher.id}>
                   {teacher.name + " " + teacher.surname}
@@ -97,7 +111,7 @@ const SubjectForm = ({
               {errors.teachers.message.toString()}
             </p>
           )}
-        </div> */}
+        </div>
       </div>
 
       {state.error && (

@@ -9,6 +9,7 @@ import { useFormState } from "react-dom";
 import { deleteSubject } from "@/lib/actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { FormContainerProps } from "./FormContainer";
 
 const deleteActionMap: { [key: string]: any } = {
   subject: deleteSubject
@@ -48,17 +49,33 @@ const forms: {
   [key: string]: (
     type: "create" | "update",
     data: any,
-    setOpenModal: Dispatch<SetStateAction<boolean>>
+    setOpenModal: Dispatch<SetStateAction<boolean>>,
+    relatedData?: any
   ) => JSX.Element;
 } = {
-  teacher: (type, data, setOpenModal) => (
-    <TeacherForm type={type} data={data} setOpenModal={setOpenModal} />
+  teacher: (type, data, setOpenModal, relatedData) => (
+    <TeacherForm
+      type={type}
+      data={data}
+      setOpenModal={setOpenModal}
+      relatedData={relatedData}
+    />
   ),
-  student: (type, data, setOpenModal) => (
-    <StudentForm type={type} data={data} setOpenModal={setOpenModal} />
+  student: (type, data, setOpenModal, relatedData) => (
+    <StudentForm
+      type={type}
+      data={data}
+      setOpenModal={setOpenModal}
+      relatedData={relatedData}
+    />
   ),
-  subject: (type, data, setOpenModal) => (
-    <SubjectForm type={type} data={data} setOpenModal={setOpenModal} />
+  subject: (type, data, setOpenModal, relatedData) => (
+    <SubjectForm
+      type={type}
+      data={data}
+      setOpenModal={setOpenModal}
+      relatedData={relatedData}
+    />
   )
 };
 
@@ -66,24 +83,9 @@ const FormModal = ({
   type,
   id,
   data,
-  table
-}: {
-  table:
-    | "teacher"
-    | "student"
-    | "parent"
-    | "subject"
-    | "class"
-    | "lesson"
-    | "exam"
-    | "assignment"
-    | "result"
-    | "event"
-    | "announcement";
-  type: "create" | "update" | "delete";
-  id?: number | string;
-  data?: any;
-}) => {
+  table,
+  relatedData
+}: FormContainerProps & { relatedData?: any }) => {
   const size = `${type === "create" ? "w-8 h-8" : "w-7 h-7"}`;
 
   const backgroundColor = `${
@@ -112,7 +114,7 @@ const FormModal = ({
         refresh();
         setOpenModal(false);
       }
-    }, [state]);
+    }, [state, refresh]);
 
     return type === "delete" && id ? (
       <form action={formAction} className="p-4 flex flex-col gap-4 ">
@@ -138,7 +140,7 @@ const FormModal = ({
         </div>
       </form>
     ) : type === "create" || type === "update" ? (
-      forms[table](type, data, setOpenModal)
+      forms[table](type, data, setOpenModal, relatedData)
     ) : (
       "Form Not Found"
     );

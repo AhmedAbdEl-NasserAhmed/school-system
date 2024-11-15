@@ -1,5 +1,5 @@
 import Button from "@/components/Button";
-import FormModal from "@/components/FormModal";
+import FormContainer from "@/components/FormContainer";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
@@ -72,7 +72,9 @@ const page = async ({
             >
               <Image src="/sort.png" alt="photo" width={14} height={14} />
             </Button>
-            {role === "admin" && <FormModal type="create" table="subject" />}
+            {role === "admin" && (
+              <FormContainer type="create" table="subject" />
+            )}
           </div>
         </div>
       </div>

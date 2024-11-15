@@ -11,11 +11,13 @@ import { Dispatch, SetStateAction } from "react";
 const StudentForm = ({
   type,
   data,
-  setOpenModal
+  setOpenModal,
+  relatedData
 }: {
   type: "create" | "update" | "delete";
   data?: any;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  relatedData: any;
 }) => {
   const {
     register,
