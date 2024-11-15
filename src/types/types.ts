@@ -1,3 +1,4 @@
+import { subjectSchema } from "@/schemas/schemas";
 import {
   Assignment,
   Event,
@@ -9,6 +10,7 @@ import {
   Subject,
   Teacher
 } from "@prisma/client";
+import { z } from "zod";
 
 export type TeacherList = Teacher & { subjects: Subject[] } & {
   classes: Class[];
@@ -56,7 +58,8 @@ export type EventList = Event & { class: Class };
 
 export type AnnouncementList = Event & { class: Class };
 
-
 export type RouteAccessMap = {
   [key: string]: string[];
 };
+
+export type SubjectSchema = z.infer<typeof subjectSchema>;

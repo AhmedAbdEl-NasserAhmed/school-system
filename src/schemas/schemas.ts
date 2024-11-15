@@ -19,7 +19,6 @@ export const TeacherSchema = z.object({
   img: z.instanceof(File, { message: "Image is required!" })
 });
 
-
 export const studentSchema = z.object({
   username: z
     .string()
@@ -37,4 +36,10 @@ export const studentSchema = z.object({
   birthday: z.date({ message: "Birthday is required!" }),
   sex: z.enum(["male", "female"], { message: "Sex is required!" }),
   img: z.instanceof(File, { message: "Image is required" })
+});
+
+export const subjectSchema = z.object({
+  id: z.coerce.number().optional(),
+  name: z.string().min(1, { message: "Subject name is required!" }),
+  teachers: z.array(z.string()).optional()
 });

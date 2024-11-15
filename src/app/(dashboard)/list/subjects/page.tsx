@@ -3,11 +3,7 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import {
-  generateColumns,
-  ITEMS_PER_PAGE,
-  subjectColumns
-} from "@/constants/constants";
+import { generateColumns, ITEMS_PER_PAGE } from "@/constants/constants";
 import { renderSubjectTableRow } from "@/helpers/helpers";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";

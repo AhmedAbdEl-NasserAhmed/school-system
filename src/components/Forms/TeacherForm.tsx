@@ -7,13 +7,16 @@ import { TeacherSchema } from "@/schemas/schemas";
 import Button from "../Button";
 import ErrorMessage from "../ErrorMessage";
 import Image from "next/image";
+import { Dispatch, SetStateAction } from "react";
 
 const TeacherForm = ({
   type,
-  data
+  data,
+  setOpenModal
 }: {
   type: "create" | "update" | "delete";
   data?: any;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const {
     register,

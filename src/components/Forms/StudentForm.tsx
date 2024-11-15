@@ -6,13 +6,16 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { studentSchema } from "@/schemas/schemas";
 import Input from "../Input";
+import { Dispatch, SetStateAction } from "react";
 
 const StudentForm = ({
   type,
-  data
+  data,
+  setOpenModal
 }: {
   type: "create" | "update" | "delete";
   data?: any;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const {
     register,

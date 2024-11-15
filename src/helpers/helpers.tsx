@@ -189,7 +189,7 @@ export const renderSubjectTableRow = async (subject: SubjectList) => {
         <div className="flex items-center gap-3">
           {role === "admin" && (
             <>
-              <FormModal type="update" table="subject" />
+              <FormModal type="update" table="subject" data={subject} />
               <FormModal type="delete" table="subject" id={subject.id} />
             </>
           )}
@@ -510,5 +510,3 @@ export const renderAnnouncementsTableRow = async (
     </tr>
   );
 };
-
-
