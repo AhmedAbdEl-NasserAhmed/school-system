@@ -6,7 +6,13 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Button from "./Button";
 import dynamic from "next/dynamic";
 import { useFormState } from "react-dom";
-import { deleteSubject, deleteClass, deleteTeacher } from "@/lib/actions";
+import {
+  deleteSubject,
+  deleteClass,
+  deleteTeacher,
+  deleteStudent,
+  deleteExam
+} from "@/lib/actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { FormContainerProps } from "./FormContainer";
@@ -14,17 +20,16 @@ import { FormContainerProps } from "./FormContainer";
 const deleteActionMap: { [key: string]: any } = {
   subject: deleteSubject,
   class: deleteClass,
-  teacher: deleteTeacher
-  // student: deleteStudent,
-  // exam: deleteExam,
-
-  // parent: deleteSubject,
-  // lesson: deleteSubject,
-  // assignment: deleteSubject,
-  // result: deleteSubject,
-  // attendance: deleteSubject,
-  // event: deleteSubject,
-  // announcement: deleteSubject
+  teacher: deleteTeacher,
+  student: deleteStudent,
+  exam: deleteExam,
+  parent: deleteSubject,
+  lesson: deleteSubject,
+  assignment: deleteSubject,
+  result: deleteSubject,
+  attendance: deleteSubject,
+  event: deleteSubject,
+  announcement: deleteSubject
 };
 
 const TeacherForm = dynamic(() => import("./Forms/TeacherForm"), {
@@ -42,9 +47,9 @@ const ClassForm = dynamic(() => import("./Forms/ClassForm"), {
   loading: () => <h1>Loading...</h1>
 });
 
-// const ExamForm = dynamic(() => import("./Forms/ExamForm"), {
-//   loading: () => <h1>Loading...</h1>
-// });
+const ExamForm = dynamic(() => import("./Forms/ExamForm"), {
+  loading: () => <h1>Loading...</h1>
+});
 
 const forms: {
   [key: string]: (
