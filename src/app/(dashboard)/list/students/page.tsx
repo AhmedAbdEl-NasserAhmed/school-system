@@ -1,12 +1,9 @@
 import Button from "@/components/Button";
-import FormModal from "@/components/FormModal";
+import FormContainer from "@/components/FormContainer";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
-import {
-  generateColumns,
-  ITEMS_PER_PAGE
-} from "@/constants/constants";
+import { generateColumns, ITEMS_PER_PAGE } from "@/constants/constants";
 import { renderStudentTableRow } from "@/helpers/helpers";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
@@ -84,7 +81,9 @@ const page = async ({
             >
               <Image src="/sort.png" alt="photo" width={14} height={14} />
             </Button>
-            {role === "admin" && <FormModal type="create" table="student" />}
+            {role === "admin" && (
+              <FormContainer type="create" table="student" />
+            )}
           </div>
         </div>
       </div>

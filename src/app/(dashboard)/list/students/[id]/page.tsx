@@ -3,12 +3,29 @@ import BigCalendarContainer from "@/components/BigCalendarContainer";
 import Card from "@/components/Card";
 import StraightAnglePieChart from "@/components/StraightAnglePieChart";
 import { studentsData } from "@/lib/data";
+import prisma from "@/lib/prisma";
+import { Class, Student } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-const SingleStudentPage = ({ params }: { params: { id: string } }) => {
-  const student = studentsData.find((studnet) => studnet.id === +params.id);
+const SingleStudentPage = async ({ params }: { params: { id: string } }) => {
+  const { id } = params;
 
+  const student:
+    | (Student & {
+        class: Class & { _count: { lessons: number } };
+      })
+    | null = await prisma.student.findUnique({
+    where: { id },
+    include: {
+      class: { include: { _count: { select: { lessons: true } } } }
+    }
+  });
+
+  if (!student) {
+    return notFound();
+  }
   return (
     <div className="flex-1 p-4 flex flex-col xl:flex-row gap-4">
       {/* Left */}
@@ -16,24 +33,7 @@ const SingleStudentPage = ({ params }: { params: { id: string } }) => {
         {/* Top */}
         <div className="flex flex-col lg:flex-row  gap-4">
           {/* Teacher Card */}
-          <Card
-            data={{
-              id: 1,
-              username: "deanguerrero",
-              email: "deanguerrero@gmail.com",
-              password: "password",
-              firstName: "Dean",
-              lastName: "Guerrero",
-              phone: "+1 234 567 89",
-              address: "1234 Main St, Anytown, USA",
-              bloodType: "A+",
-              dateOfBirth: "2000-01-01",
-              sex: "male",
-              img: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1200"
-            }}
-            table="student"
-            person={student}
-          />
+          <Card data={student} table="student" person={student} />
           {/* Small Cards */}
           <div className="flex-1 flex gap-4 justify-between flex-wrap ">
             <div className="flex items-center gap-2 bg-white p-4 w-full rouned-md md:w-[47%] xl:w-[45%] 2xl:w-[47%] ">
@@ -93,7 +93,7 @@ const SingleStudentPage = ({ params }: { params: { id: string } }) => {
         {/* Bottom */}
         <div className="mt-4 bg-white rouned-md p-4 h-[800px]">
           <h1>Student&apos;s Schedule </h1>
-          <BigCalendarContainer />
+          <BigCalendarContainer type="classId" id={student.class.id} />
         </div>
       </div>
       {/* Right */}

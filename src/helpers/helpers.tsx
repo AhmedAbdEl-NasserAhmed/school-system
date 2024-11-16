@@ -229,8 +229,8 @@ export const renderClassTableRow = async (classData: ClassList) => {
         <div className="flex items-center gap-3">
           {role === "admin" && (
             <>
-              <FormContainer type="update" table="class" />
-              <FormContainer type="delete" table="class" />
+              <FormContainer type="update" table="class" data={classData} />
+              <FormContainer type="delete" table="class" id={classData.id} />
             </>
           )}
         </div>
@@ -348,7 +348,11 @@ export const renderAssignmentsTableRow = async (assignment: AssignmentList) => {
           {role === "admin" ||
             (role === "teacher" && (
               <>
-                <FormContainer type="update" table="assignment" data={assignment} />
+                <FormContainer
+                  type="update"
+                  table="assignment"
+                  data={assignment}
+                />
                 <FormContainer
                   type="delete"
                   table="assignment"

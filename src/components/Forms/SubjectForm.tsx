@@ -30,14 +30,7 @@ const SubjectForm = ({
     resolver: zodResolver(subjectSchema)
   });
 
-  const [teachers, setTeachers] = useState([]);
-
-  useEffect(() => {
-    if (relatedData) {
-      const { teachers } = relatedData;
-      setTeachers(teachers);
-    }
-  }, [relatedData]);
+  const { teachers } = relatedData;
 
   // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 

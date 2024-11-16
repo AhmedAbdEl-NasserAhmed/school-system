@@ -1,13 +1,37 @@
 import Announcements from "@/components/Announcements ";
-import BigCalendar from "@/components/BigCalendar";
+import BigCalendarContainer from "@/components/BigCalendarContainer";
 import Card from "@/components/Card";
 import StraightAnglePieChart from "@/components/StraightAnglePieChart";
-import { teachersData } from "@/lib/data";
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
+import { Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-const SingleTeacherPage = ({ params }: { params: { id: string } }) => {
-  const teacher = teachersData.find((teacher) => teacher.id === +params.id);
+const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
+  const { id } = params;
+
+  const teacher:
+    | (Teacher & {
+        _count: { subjects: number; lessons: number; classes: number };
+      })
+    | null = await prisma.teacher.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: {
+          subjects: true,
+          lessons: true,
+          classes: true
+        }
+      }
+    }
+  });
+
+  if (!teacher) {
+    return notFound();
+  }
 
   return (
     <div className="flex-1 p-4 flex flex-col xl:flex-row gap-4">
@@ -16,24 +40,7 @@ const SingleTeacherPage = ({ params }: { params: { id: string } }) => {
         {/* Top */}
         <div className="flex flex-col lg:flex-row  gap-4">
           {/* Teacher Card */}
-          <Card
-            table="teacher"
-            data={{
-              id: 1,
-              username: "deanguerrero",
-              email: "deanguerrero@gmail.com",
-              password: "password",
-              firstName: "Dean",
-              lastName: "Guerrero",
-              phone: "+1 234 567 89",
-              address: "1234 Main St, Anytown, USA",
-              bloodType: "A+",
-              dateOfBirth: "2000-01-01",
-              sex: "male",
-              img: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1200"
-            }}
-            person={teacher}
-          />
+          <Card table="teacher" data={teacher} person={teacher} />
           {/* Small Cards */}
           <div className="flex-1 flex gap-4 justify-between flex-wrap ">
             <div className="flex items-center gap-2 bg-white p-4 w-full rouned-md md:w-[47%] xl:w-[45%] 2xl:w-[47%] ">
@@ -93,7 +100,7 @@ const SingleTeacherPage = ({ params }: { params: { id: string } }) => {
         {/* Bottom */}
         <div className="mt-4 bg-white rouned-md p-4 h-[800px]">
           <h1>Teacher&apos;s Schedule </h1>
-          <BigCalendar />
+          <BigCalendarContainer type="teacherId" id={teacher.id} />
         </div>
       </div>
       {/* Right */}

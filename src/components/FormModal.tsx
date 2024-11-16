@@ -6,15 +6,15 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Button from "./Button";
 import dynamic from "next/dynamic";
 import { useFormState } from "react-dom";
-import { deleteSubject } from "@/lib/actions";
+import { deleteSubject, deleteClass, deleteTeacher } from "@/lib/actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { FormContainerProps } from "./FormContainer";
 
 const deleteActionMap: { [key: string]: any } = {
-  subject: deleteSubject
-  // class: deleteClass,
-  // teacher: deleteTeacher,
+  subject: deleteSubject,
+  class: deleteClass,
+  teacher: deleteTeacher
   // student: deleteStudent,
   // exam: deleteExam,
 
@@ -38,9 +38,10 @@ const SubjectForm = dynamic(() => import("./Forms/SubjectForm"), {
   loading: () => <h1>Loading...</h1>
 });
 
-// const ClassForm = dynamic(() => import("./Forms/ClassForm"), {
-//   loading: () => <h1>Loading...</h1>
-// });
+const ClassForm = dynamic(() => import("./Forms/ClassForm"), {
+  loading: () => <h1>Loading...</h1>
+});
+
 // const ExamForm = dynamic(() => import("./Forms/ExamForm"), {
 //   loading: () => <h1>Loading...</h1>
 // });
@@ -71,6 +72,14 @@ const forms: {
   ),
   subject: (type, data, setOpenModal, relatedData) => (
     <SubjectForm
+      type={type}
+      data={data}
+      setOpenModal={setOpenModal}
+      relatedData={relatedData}
+    />
+  ),
+  class: (type, data, setOpenModal, relatedData) => (
+    <ClassForm
       type={type}
       data={data}
       setOpenModal={setOpenModal}
